@@ -1,0 +1,14 @@
+.ant-form-item-label > label{
+    color: white !important;
+}
+
+.ant-page-header.page{
+    height: 100%;
+    margin-top: 2%;
+    width: 100%;
+    background-color: #001529;
+}
+
+.ant-descriptions-item-container .ant-descriptions-item-label, .ant-descriptions-item-container .ant-descriptions-item-content{
+    display: inline !important;
+}

@@ -1,14 +1,14 @@
 // import logo from './logo.svg';
 // import './App.css';
 import logo from '../img/logo.png';
-import "../css/header.css";
+import "../css/bottom_css.css";
 import "antd/dist/antd.css";
 import React from 'react';
-import { Layout, Menu, Image } from 'antd';
-import { Link,NavLink } from 'react-router-dom'
+import { Layout, Menu, Image,Typography } from 'antd';
 import styled from 'styled-components';
 
 const { Header, Content, Footer} = Layout;
+const { Title } = Typography;
 
 let size = {
   "width" : 120,
@@ -43,7 +43,7 @@ const Imagemod = styled(Image)`
     
 `;
 
-export default class Headerfile extends React.Component{
+export default class Bottomfile extends React.Component{
   componentDidMount(){
     console.log("로딩 완료");
   }
@@ -51,18 +51,12 @@ export default class Headerfile extends React.Component{
   render(){
     return(
       // <Layout style={{backgroundColor:"#001529",paddingBottom:10}}>
-        <Header className="header" style={{backgroundColor:"#001529",lineHeight:7.2,padding:0}}>
-          {/* <div style={{float:"left",margin:[16,24,16,0],backgroundColor:'white'}}> */}\
-          <NavLink to={"/"}>
-            <Imagemod preview={false} src={logo}  />
-          </NavLink>
-          {/* </div> */}
-          <Menu triggerSubMenuAction="click" theme="dark" mode="horizontal" style={{float:"right",backgroundColor:"unset",}}>
-            <Menu.Item key="1" style={{padding:"0 10px"}}><Link to="/first">게시판</Link></Menu.Item>
-            <Menu.Item key="2" style={{padding:"0 10px"}}><Link to="/second">회원정보</Link></Menu.Item>
-            <Menu.Item key="3" style={{padding:"0 10px"}}><Link to="/third">로그아웃</Link></Menu.Item>
-          </Menu>
-        </Header>
+        <Footer className="footer" style={{backgroundColor:"#001529",lineHeight:2,textAlign:'center'}} >
+            <Title level={5} style={{color:'white'}}>{"< COPYRIGHT 2020. dinist. All rights reserved. >"}</Title>
+            <Title level={5} style={{color:'white'}}>Front : React.js Backend : Spring Boot</Title>
+            {/* <Imagemod preview={false} src={logo} style={{alignItems:'center'}}/>
+            <Imagemod preview={false} src={logo} style={{alignItems:'center'}}/> */}
+        </Footer>
       // </Layout>
     )
   }
