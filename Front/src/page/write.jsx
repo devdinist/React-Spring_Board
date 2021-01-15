@@ -1,22 +1,38 @@
 import React from 'react'
-import { Typography, PageHeader, Descriptions, Form, Input,Button } from 'antd'
-import "../css/subpage.css";
+import Axios from 'axios';
+import { PageHeader, Descriptions, Form, Input,Button } from 'antd'
 import "../css/write_css.css";
-import styled from 'styled-components';
-
-
-const Board_title = styled(Typography)`
-    color:white;
-`;
-
-const Inboard_Title = styled(Form.Item)`
-    color: white;
-`;
+import Mainbase from '../page/base';
+import Chkcookie from '../service/chkcookie';
+import {Extendtoken_URL ,Boardwrite_URL,BOARD} from  '../key/key';
+import {Board_title,Inboard_Title} from '../style/styled'
 
 export default class First extends React.Component{
 
+    componentDidMount(){
+        if(Chkcookie.islogin()){
+            Axios.post(Extendtoken_URL,{"user":Chkcookie.getuser()},{headers:{
+                "Authorization" : Chkcookie.gettoken(),
+            }}).then(v => {
+                Chkcookie.settoken(v.data.token);
+            })
+        }
+    }
+
+    finish = (v) => {
+        Axios.post(Boardwrite_URL,v.board,{
+            headers:{
+                "Authorization" : Chkcookie.gettoken(),
+            }
+        }).then(res => {
+            alert("등록이 완료되었습니다.");
+            this.props.history.push(BOARD);
+        })
+    }
+
     render(){
         return(
+            <Mainbase>
             <PageHeader
                 className="page"
                 ghost={false}
@@ -24,6 +40,9 @@ export default class First extends React.Component{
                     <Board_title level={3}>게시글 작성</Board_title>
                 }
                 style={{
+                    justifyContent:'center',display:'flex',alignItems:'center',flexDirection:'column',
+                    height:'100vh',
+                    paddingLeft:'3%',
                     color:"white",
                     backgroundColor:"#001529",
                 }}
@@ -34,10 +53,12 @@ export default class First extends React.Component{
                             validateMessages={{
                                 required:'${label}을 입력하세요!'
                             }}
+                            onFinish={this.finish}
                             >
                             <Inboard_Title
                                 name={['board','title']}
                                 label="제목"
+                                
                                 rules={[
                                     {
                                         required:true,
@@ -68,6 +89,7 @@ export default class First extends React.Component{
                     </Descriptions.Item>
                 </Descriptions>
             </PageHeader>
+            </Mainbase>
         )
     }
 }

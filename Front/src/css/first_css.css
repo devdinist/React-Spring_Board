@@ -2,20 +2,15 @@
     min-width: 100%;
 }
 
+.ant-page-header-heading{
+    width: 100%;
+}
+
 .ant-page-header.page{
-    height: 100%;
-    margin-top: 2%;
+    height: 100vh;
     background-color: #001529;
 }
 
 .ant-page-header-heading-title{
     color: white;
 }
-
-/* .ss{
-    min-height: 100%;
-} */
-
-/* html, body, #root, #header, #content, #content>div {
-    height: 90%
-} */

@@ -4,9 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
-**/src/main/**/controller/CORS.java
-**/src/main/resources/application.*
+**/resources/application.properties
 
 ### STS ###
 .apt_generated
@@ -35,8 +33,6 @@ out/
 /dist/
 /nbdist/
 /.nb-gradle/
-
-
 
 ### VS Code ###
 .vscode/
