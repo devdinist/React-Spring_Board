@@ -1,9 +1,9 @@
 import React from 'react';
 import Axios from 'axios';
 import { Layout, Form,Input,Button,Tooltip } from 'antd';
-import { UserOutlined, LockOutlined,InfoCircleOutlined,MailOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined,InfoCircleOutlined,MailOutlined,CheckOutlined } from '@ant-design/icons';
 import Mainbase from '../page/base';
-import { Register_URL,RES_OK } from '../key/key';
+import { Register_URL,RES_OK,IDCheck_URL } from '../key/key';
 
 const { Content } = Layout
 
@@ -13,15 +13,46 @@ const Vmessage = {
 
 export default class Login extends React.Component{
 
-    render(){
+    constructor(){
+        super();
+        this.state={
+            id_checked : false,
+            id : "",
+        };
+    }
 
+    ID_listener = (v) => {
+        this.setState({
+            id_checked : false,
+            id : v,
+        });
+    }
+
+    ID_Check = () => {
+        Axios.post(IDCheck_URL,{ user : this.state.id})
+        .then(r => {
+            if(r.data === "ok"){
+                alert("사용할 수 있습니다.");
+                this.setState({id_checked : true});
+            }
+            else alert("사용할 수 없습니다.");
+        })
+    }
+
+    render(){
+        
         const submit = (values) => {
-            Axios.post(Register_URL,values).then(v => {
-                if(v.status === RES_OK){
-                    alert("회원가입이 완료되었습니다!\n메인화면으로 이동합니다.")
-                    this.props.history.push("/");
-                }
-            });
+            if(this.state.id_checked){
+                Axios.post(Register_URL,values).then(v => {
+                    if(v.status === RES_OK){
+                        alert("회원가입이 완료되었습니다!\n메인화면으로 이동합니다.")
+                        this.props.history.push("/");
+                    }
+                });
+            }else{
+                alert("아이디 중복확인이 되지 않았습니다.");
+            }
+            
         }
 
         return(
@@ -46,11 +77,18 @@ export default class Login extends React.Component{
                             rules={[
                                     {
                                         required:true,
-                                        message:'아이디를 입력하세요!'
+                                        message:'아이디를 입력하세요!',
+                                    },
+                                    {
+                                        message:'아이디는 영문소문자 숫자를 사용한 4~12자까지 가능합니다.',
+                                        pattern:/^[a-z0-9]{4,12}$/,
                                     },
                                 ]}
                         >
-                            <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="ID (4 ~ 12자리)"/>
+                            <Input onChange={(v) => this.ID_listener(v.target.value)}
+                            prefix={<UserOutlined className="site-form-item-icon"/>}
+                            placeholder="ID (4 ~ 12자리)"
+                             addonAfter={<CheckOutlined onClick={() => this.ID_Check()}/>}/>
                         </Form.Item>
 
                         <Form.Item
@@ -59,6 +97,11 @@ export default class Login extends React.Component{
                                     {
                                         required:true,
                                         message:'비밀번호를 입력하세요!'
+                                    },
+                                    {
+                                        message:'비밀번호는 특수문자 숫자 영대소문자를 조합하여 8자 이상입니다.',
+                                        pattern:/(?=.*[!@#$%^&*]){1,20}(?=.*[0-9]){1,20}(?=.*[A-Za-z]){1,20}.{8,20}$/,
+
                                     },
                                 ]}
                         >

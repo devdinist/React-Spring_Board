@@ -55,7 +55,22 @@ public class JwtAuthenticationController {
 
     @RequestMapping(value = "/api/user/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody DTOaccount user) throws Exception {
-        return ResponseEntity.ok(userDetailsService.save(user));
+        if(userDetailsService.IDCheck(user.getUser()) && userDetailsService.PWCheck(user.getPassword())){
+            System.out.println("id : "+user.getUser());
+            System.out.println("pw : "+user.getPassword());
+            return ResponseEntity.ok(userDetailsService.save(user));
+        }else{
+            return ResponseEntity.badRequest().body("Does not match requirement.\nDid you really proceed through registration page?");
+        }
+    }
+
+    @PostMapping(value="/api/user/idcheck")
+    public ResponseEntity<?> idCheck(@RequestBody DTOaccount user){
+        if(userDetailsService.UseIdCheck(user.getUser())){
+            return ResponseEntity.ok("ok");
+        }else{
+            return ResponseEntity.ok("no");
+        }
     }
 
     @PostMapping("/api/user/update")

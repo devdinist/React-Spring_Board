@@ -11,9 +11,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
+
+    private final String ID_REGEX = "^[a-z0-9]{4,12}$";
+    private final String PW_REGEX = "(?=.*[!@#$%^&*]){1,20}(?=.*[0-9]){1,20}(?=.*[A-Za-z]){1,20}.{8,20}$";
 
     @Autowired
     private DAOrepository daOrepository;
@@ -30,6 +34,27 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
         return new org.springframework.security.core.userdetails.User(user.getUser(), user.getPassword(),
                 new ArrayList<>());
+    }
+
+    public boolean UseIdCheck(String id){
+        if(daOrepository.findByUser(id) == null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean IDCheck(String id){
+//        System.out.println(daOrepository.findByUser(id));
+        if(daOrepository.findByUser(id) == null){
+            return Pattern.matches(ID_REGEX,id);
+        }else{
+            return false;
+        }
+    }
+
+    public boolean PWCheck(String pw){
+        return Pattern.matches(PW_REGEX,pw);
     }
 
     public DAOaccount update(DAOaccount user){
