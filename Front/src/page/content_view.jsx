@@ -29,8 +29,10 @@ export default class First extends React.Component{
                 }
             }).then(v => {
                 this.setState({board : v.data.base});
+                document.title=v.data.base.title+" - 게시판";
             });
         }
+        // document.title=
         
     }
 

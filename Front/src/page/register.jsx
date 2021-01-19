@@ -1,6 +1,6 @@
 import React from 'react';
 import Axios from 'axios';
-import { Layout, Form,Input,Button,Tooltip } from 'antd';
+import { Layout, Form,Input,Button,Tooltip,InputNumber } from 'antd';
 import { UserOutlined, LockOutlined,InfoCircleOutlined,MailOutlined,CheckOutlined } from '@ant-design/icons';
 import Mainbase from '../page/base';
 import { Register_URL,RES_OK,IDCheck_URL } from '../key/key';
@@ -21,6 +21,16 @@ export default class Login extends React.Component{
         };
     }
 
+    componentDidMount(){
+        document.title="회원 가입";
+    }
+
+    age_chk = (v) => {
+        const vv = v*1;
+        if(vv < 201) return true;
+        return false;
+    }
+
     ID_listener = (v) => {
         this.setState({
             id_checked : false,
@@ -28,15 +38,17 @@ export default class Login extends React.Component{
         });
     }
 
-    ID_Check = () => {
-        Axios.post(IDCheck_URL,{ user : this.state.id})
+    ID_Check = async() => {
+        await Axios.post(IDCheck_URL,{ user : this.state.id})
         .then(r => {
             if(r.data === "ok"){
                 alert("사용할 수 있습니다.");
                 this.setState({id_checked : true});
             }
-            else alert("사용할 수 없습니다.");
-        })
+            else{
+                alert("사용할 수 없습니다.");}
+            }
+        )
     }
 
     render(){
@@ -78,6 +90,7 @@ export default class Login extends React.Component{
                                     {
                                         required:true,
                                         message:'아이디를 입력하세요!',
+
                                     },
                                     {
                                         message:'아이디는 영문소문자 숫자를 사용한 4~12자까지 가능합니다.',
@@ -93,6 +106,7 @@ export default class Login extends React.Component{
 
                         <Form.Item
                             name="password"
+                            // hasFeedback
                             rules={[
                                     {
                                         required:true,
@@ -105,8 +119,38 @@ export default class Login extends React.Component{
                                     },
                                 ]}
                         >
-                            <Input prefix={<LockOutlined className="site-form-item-icon"/>}
+                            <Input.Password prefix={<LockOutlined className="site-form-item-icon"/>}
                              placeholder="Password"
+                              type="password"
+                              suffix={
+                                  <Tooltip color='#87d068' placement="right" title="비밀번호는 안전하게!" overlayStyle={{paddingLeft:'1%'}}>
+                                      <InfoCircleOutlined style={{color:'rgba(0,0,0,.45)'}}/>
+                                  </Tooltip>
+                              }
+                              />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="passwordchk"
+                            dependencies={['password']}
+                            // hasFeedback
+                            rules={[
+                                    {
+                                        required:true,
+                                        message:'비밀번호를 한번 더 입력하세요!'
+                                    },
+                                    ({getFieldValue}) => ({
+                                        validator(_,v){
+                                            if(!v || getFieldValue('password') === v){
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject("비밀번호가 일치하지 않습니다.");
+                                        }
+                                    })
+                                ]}
+                        >
+                            <Input.Password prefix={<LockOutlined className="site-form-item-icon"/>}
+                             placeholder="Password 확인"
                               type="password"
                               suffix={
                                   <Tooltip color='#87d068' placement="right" title="비밀번호는 안전하게!" overlayStyle={{paddingLeft:'1%'}}>
@@ -137,10 +181,16 @@ export default class Login extends React.Component{
                                         required:true,
                                         message:'나이를 입력하세요!'
                                     },
+                                    {
+                                        message:'나이는 1~200세까지 입력 가능합니다.',
+                                        pattern:/^[1-9]{1}$|^[1-9]{1}[1-9]{1}$|^[1]{1}[0-9]{1}[0-9]{1}$|^[2]{1}[0]{1}[0]{1}$/,
+                                    }
                                 ]}
                         >
                             <Input prefix={<InfoCircleOutlined className="site-form-item-icon"/>}
                              placeholder="Age"
+                             max="200"
+                             min="1"
                              type='number'/>
                         </Form.Item>
 

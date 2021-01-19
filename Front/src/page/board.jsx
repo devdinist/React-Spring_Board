@@ -46,6 +46,7 @@ export default class Board extends React.Component{
     }
 
     componentDidMount(){
+        document.title="게시판";
         this.init_list();
     }
 

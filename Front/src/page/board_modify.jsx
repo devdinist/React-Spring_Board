@@ -21,6 +21,7 @@ export default class BoardModify extends React.Component{
     }
 
     componentDidMount(){
+        document.title="게시글 수정";
         this.setState({isValid : this.props.history.location.state === undefined ? false : true,
             board : this.props.history.location.state === undefined ? {} : this.props.history.location.state.board,
         })

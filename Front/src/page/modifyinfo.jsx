@@ -26,6 +26,10 @@ export default class Second extends React.Component{
         }
     }
 
+    componentDidMount(){
+        document.title="회원 정보 수정";
+    }
+
     render(){
         const submit = (values) => {
             console.log(values);
