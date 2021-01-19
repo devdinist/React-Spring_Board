@@ -4,6 +4,10 @@ const { Content } = Layout
 
 export default class NeedLogin extends React.Component{
 
+    componentDidMount(){
+        document.title="로그인 필요";
+    }
+
     render(){
         return(
             <Content>

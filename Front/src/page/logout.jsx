@@ -3,10 +3,9 @@ import Chkcookie from '../service/chkcookie';
 
 export default class Logout extends React.Component{
 
-    logout(){
-        
+    componentDidMount(){
+        document.title="로그아웃 중...";
     }
-
 
     render(){
         return(

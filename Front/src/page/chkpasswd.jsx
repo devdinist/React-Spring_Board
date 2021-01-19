@@ -14,7 +14,12 @@ const Vmessage = {
 
 export default class Chkpasswd extends React.Component{
 
+    componentDidMount(){
+        document.title="비밀번호 확인";
+    }
+
     render(){
+
         const ref = qs.parse(this.props.location.search).ref;
 
         const header = {
@@ -37,10 +42,14 @@ export default class Chkpasswd extends React.Component{
                         },
                     });
                 }
+            })
+            .catch(e => {
+                alert("비밀번호가 일치하지 않습니다.");
             });
         }
 
         return(
+            
             <Mainbase>
                 <Content>
             <div id="notfound" style={{textAlign:'center',justifyContent:'center',display:'flex',alignItems:'center',flexDirection:'column',

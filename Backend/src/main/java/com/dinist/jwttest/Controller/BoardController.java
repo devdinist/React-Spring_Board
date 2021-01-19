@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /*
-    °Ô½ÃÆÇ °ü·Ã¿äÃ»¿¡ ´ëÇÑ Ã³¸®
+    ê²Œì‹œíŒ ê´€ë ¨ìš”ì²­ì— ëŒ€í•œ ì²˜ë¦¬
  */
 
 

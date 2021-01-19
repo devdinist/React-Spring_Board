@@ -10,6 +10,7 @@ import {Board_title,Inboard_Title} from '../style/styled'
 export default class First extends React.Component{
 
     componentDidMount(){
+        document.title="게시글 작성";
         if(Chkcookie.islogin()){
             Axios.post(Extendtoken_URL,{"user":Chkcookie.getuser()},{headers:{
                 "Authorization" : Chkcookie.gettoken(),

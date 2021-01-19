@@ -15,6 +15,10 @@ const Vmessage = {
 
 export default class Login extends React.Component{
 
+    componentDidMount(){
+        document.title="회원 로그인";
+    }
+
     render(){
 
         const submit = (values) => {
@@ -25,6 +29,8 @@ export default class Login extends React.Component{
                     this.props.history.push("/");
                     window.location.reload();
                 }
+            }).catch(e => {
+                alert("아이디 또는 비밀번호가 일치하지 않습니다.");
             });
         }
 

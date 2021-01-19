@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 /*
-    »ç¿ëÀÚ ¿äÃ»¿¡ ´ëÇÑ Ã³¸® 
+    ì‚¬ìš©ì ìš”ì²­ì— ëŒ€í•œ ì²˜ë¦¬ 
 */
 
 @RestController

@@ -1,9 +1,9 @@
 import React from 'react';
 import Axios from 'axios';
-import { Layout, Form,Input,Button,Tooltip } from 'antd';
-import { UserOutlined, LockOutlined,InfoCircleOutlined,MailOutlined } from '@ant-design/icons';
+import { Layout, Form,Input,Button,Tooltip,InputNumber } from 'antd';
+import { UserOutlined, LockOutlined,InfoCircleOutlined,MailOutlined,CheckOutlined } from '@ant-design/icons';
 import Mainbase from '../page/base';
-import { Register_URL,RES_OK } from '../key/key';
+import { Register_URL,RES_OK,IDCheck_URL } from '../key/key';
 
 const { Content } = Layout
 
@@ -13,15 +13,58 @@ const Vmessage = {
 
 export default class Login extends React.Component{
 
-    render(){
+    constructor(){
+        super();
+        this.state={
+            id_checked : false,
+            id : "",
+        };
+    }
 
+    componentDidMount(){
+        document.title="회원 가입";
+    }
+
+    age_chk = (v) => {
+        const vv = v*1;
+        if(vv < 201) return true;
+        return false;
+    }
+
+    ID_listener = (v) => {
+        this.setState({
+            id_checked : false,
+            id : v,
+        });
+    }
+
+    ID_Check = async() => {
+        await Axios.post(IDCheck_URL,{ user : this.state.id})
+        .then(r => {
+            if(r.data === "ok"){
+                alert("사용할 수 있습니다.");
+                this.setState({id_checked : true});
+            }
+            else{
+                alert("사용할 수 없습니다.");}
+            }
+        )
+    }
+
+    render(){
+        
         const submit = (values) => {
-            Axios.post(Register_URL,values).then(v => {
-                if(v.status === RES_OK){
-                    alert("회원가입이 완료되었습니다!\n메인화면으로 이동합니다.")
-                    this.props.history.push("/");
-                }
-            });
+            if(this.state.id_checked){
+                Axios.post(Register_URL,values).then(v => {
+                    if(v.status === RES_OK){
+                        alert("회원가입이 완료되었습니다!\n메인화면으로 이동합니다.")
+                        this.props.history.push("/");
+                    }
+                });
+            }else{
+                alert("아이디 중복확인이 되지 않았습니다.");
+            }
+            
         }
 
         return(
@@ -46,24 +89,68 @@ export default class Login extends React.Component{
                             rules={[
                                     {
                                         required:true,
-                                        message:'아이디를 입력하세요!'
+                                        message:'아이디를 입력하세요!',
+
+                                    },
+                                    {
+                                        message:'아이디는 영문소문자 숫자를 사용한 4~12자까지 가능합니다.',
+                                        pattern:/^[a-z0-9]{4,12}$/,
                                     },
                                 ]}
                         >
-                            <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="ID (4 ~ 12자리)"/>
+                            <Input onChange={(v) => this.ID_listener(v.target.value)}
+                            prefix={<UserOutlined className="site-form-item-icon"/>}
+                            placeholder="ID (4 ~ 12자리)"
+                             addonAfter={<CheckOutlined onClick={() => this.ID_Check()}/>}/>
                         </Form.Item>
 
                         <Form.Item
                             name="password"
+                            // hasFeedback
                             rules={[
                                     {
                                         required:true,
                                         message:'비밀번호를 입력하세요!'
                                     },
+                                    {
+                                        message:'비밀번호는 특수문자 숫자 영대소문자를 조합하여 8자 이상입니다.',
+                                        pattern:/(?=.*[!@#$%^&*]){1,20}(?=.*[0-9]){1,20}(?=.*[A-Za-z]){1,20}.{8,20}$/,
+
+                                    },
                                 ]}
                         >
-                            <Input prefix={<LockOutlined className="site-form-item-icon"/>}
+                            <Input.Password prefix={<LockOutlined className="site-form-item-icon"/>}
                              placeholder="Password"
+                              type="password"
+                              suffix={
+                                  <Tooltip color='#87d068' placement="right" title="비밀번호는 안전하게!" overlayStyle={{paddingLeft:'1%'}}>
+                                      <InfoCircleOutlined style={{color:'rgba(0,0,0,.45)'}}/>
+                                  </Tooltip>
+                              }
+                              />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="passwordchk"
+                            dependencies={['password']}
+                            // hasFeedback
+                            rules={[
+                                    {
+                                        required:true,
+                                        message:'비밀번호를 한번 더 입력하세요!'
+                                    },
+                                    ({getFieldValue}) => ({
+                                        validator(_,v){
+                                            if(!v || getFieldValue('password') === v){
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject("비밀번호가 일치하지 않습니다.");
+                                        }
+                                    })
+                                ]}
+                        >
+                            <Input.Password prefix={<LockOutlined className="site-form-item-icon"/>}
+                             placeholder="Password 확인"
                               type="password"
                               suffix={
                                   <Tooltip color='#87d068' placement="right" title="비밀번호는 안전하게!" overlayStyle={{paddingLeft:'1%'}}>
@@ -94,10 +181,16 @@ export default class Login extends React.Component{
                                         required:true,
                                         message:'나이를 입력하세요!'
                                     },
+                                    {
+                                        message:'나이는 1~200세까지 입력 가능합니다.',
+                                        pattern:/^[1-9]{1}$|^[1-9]{1}[1-9]{1}$|^[1]{1}[0-9]{1}[0-9]{1}$|^[2]{1}[0]{1}[0]{1}$/,
+                                    }
                                 ]}
                         >
                             <Input prefix={<InfoCircleOutlined className="site-form-item-icon"/>}
                              placeholder="Age"
+                             max="200"
+                             min="1"
                              type='number'/>
                         </Form.Item>
 
